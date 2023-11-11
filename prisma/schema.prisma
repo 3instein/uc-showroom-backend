@@ -10,11 +10,35 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Vehicle {
+model Car {
   id Int @id @default(autoincrement())
   model String
   year Int
   seats Int
   manufacturer String
   price Int
+  fuel_type String
+  trunk_capacity Int
+}
+
+model Truck {
+  id Int @id @default(autoincrement())
+  model String
+  year Int
+  seats Int
+  manufacturer String
+  price Int
+  wheels Int
+  cargo_capacity Int
+}
+
+model Motorcycle {
+  id Int @id @default(autoincrement())
+  model String
+  year Int
+  seats Int
+  manufacturer String
+  price Int
+  trunk_capacity Int
+  fuel_capacity Int
 }
