@@ -1,4 +1,4 @@
-export declare type Vehicle = {
+export interface Vehicle {
     id: string
     model: string
     year: number
