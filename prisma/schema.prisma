@@ -11,42 +11,56 @@ datasource db {
 }
 
 model Customer {
-  id Int @id @default(autoincrement())
-  name String
-  address String
-  phone String
-  id_card_number String
+  id              Int      @id @default(autoincrement())
+  name            String
+  address         String
+  phone           String
+  id_card_number  String
+  orders          Order[]
 }
 
 model Car {
-  id Int @id @default(autoincrement())
-  model String
-  year Int
-  seats Int
-  manufacturer String
-  price Int
-  fuel_type String
-  trunk_capacity Int
+  id              Int      @id @default(autoincrement())
+  model           String
+  year            Int
+  seats           Int
+  manufacturer    String
+  price           Int
+  fuel_type       String
+  trunk_capacity  Int
+  orders          Order[]
 }
 
 model Truck {
-  id Int @id @default(autoincrement())
-  model String
-  year Int
-  seats Int
-  manufacturer String
-  price Int
-  wheels Int
-  cargo_capacity Int
+  id               Int      @id @default(autoincrement())
+  model            String
+  year             Int
+  seats            Int
+  manufacturer     String
+  price            Int
+  wheels           Int
+  cargo_capacity   Int
+  orders           Order[]
 }
 
 model Motorcycle {
-  id Int @id @default(autoincrement())
-  model String
-  year Int
-  seats Int
-  manufacturer String
-  price Int
-  trunk_capacity Int
-  fuel_capacity Int
+  id                Int      @id @default(autoincrement())
+  model             String
+  year              Int
+  seats             Int
+  manufacturer      String
+  price             Int
+  trunk_capacity    Int
+  fuel_capacity     Int
+  orders            Order[]
+}
+
+model Order {
+  id              Int      @id @default(autoincrement())
+  customer_id     Int
+  vehicle_id      Int
+  customer        Customer @relation(fields: [customer_id], references: [id])
+  car             Car?     @relation(fields: [vehicle_id], references: [id], map: "order_car_fk")
+  truck           Truck?   @relation(fields: [vehicle_id], references: [id], map: "order_truck_fk")
+  motorcycle      Motorcycle? @relation(fields: [vehicle_id], references: [id], map: "order_motorcycle_fk")
 }
