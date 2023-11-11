@@ -1,5 +1,3 @@
-// carRoutes.ts
-
 import express, { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 
@@ -58,17 +56,34 @@ router.put('/:id', async (req: Request, res: Response) => {
 
 router.delete('/:id', async (req: Request, res: Response) => {
     const { id } = req.params;
-    const customer = await prisma.customer.delete({
-        where: {
-            id: parseInt(id)
-        }
-    });
-    res.json(
-        {
+
+    try {
+        // Attempt to delete the customer
+        const deletedCustomer = await prisma.customer.delete({
+            where: { id: parseInt(id) },
+        });
+
+        res.json({
             success: true,
-            data: customer
+            data: deletedCustomer,
+        });
+    } catch (error: any) {
+        if (error.code === 'P2003') {
+            // P2003 is the Prisma error code for foreign key constraint violation
+            return res.status(400).json({
+                success: false,
+                error: 'Cannot delete customer due to existing related records.',
+            });
         }
-    );
+
+        console.error("Error deleting customer:", error);
+        res.status(500).json({
+            success: false,
+            error: "Internal Server Error",
+        });
+    }
 })
+
+
 
 export default router;
