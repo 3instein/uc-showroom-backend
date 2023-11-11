@@ -31,9 +31,9 @@ router.get('/', async (req: Request, res: Response) => {
         
         // Convert each order to a common structure with vehicle_type
         const ordersWithVehicleType = [
-            ...carOrders.map(order => ({ ...order, vehicle_type: 'car' })),
-            ...truckOrders.map(order => ({ ...order, vehicle_type: 'truck' })),
-            ...motorcycleOrders.map(order => ({ ...order, vehicle_type: 'motorcycle' })),
+            ...carOrders.map(order => ({ ...order, vehicle_type: 'car', vehicle_price: order.car.price })),
+            ...truckOrders.map(order => ({ ...order, vehicle_type: 'truck', vehicle_price: order.truck.price })),
+            ...motorcycleOrders.map(order => ({ ...order, vehicle_type: 'motorcycle', vehicle_price: order.motorcycle.price })),
         ];
         
         res.json({
