@@ -6,7 +6,6 @@ import motorcycleRoutes from "../routes/motorcycleRoutes";
 import customerRoutes from "../routes/customerRoutes";
 import orderRoutes from "../routes/orderRoutes";
 import cors from "cors";
-import path from "path";
 
 const app = express();
 
