@@ -8,7 +8,12 @@ const router = express.Router();
 
 router.get('/', async (req: Request, res: Response) => {
     const cars = await prisma.car.findMany();
-    res.json(cars);
+    res.json(
+        {
+            success: true,
+            data: cars
+        }
+    );
 });
 
 export default router;

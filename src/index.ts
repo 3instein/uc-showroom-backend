@@ -3,10 +3,11 @@
 import express from "express";
 import createError from "http-errors";
 import carRoutes from "../routes/carRoutes";
+import cors from "cors";
 
 const app = express();
 
-app.use(express.json());
+app.use(express.json(), cors());
 
 // Use the carRoutes module for the '/cars' route
 app.use('/cars', carRoutes);
