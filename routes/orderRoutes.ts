@@ -6,8 +6,10 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 const router = express.Router();
 
+// Get all orders with details of the associated vehicles and customers
 router.get('/', async (req: Request, res: Response) => {
     try {
+        // Retrieve car orders with associated car and customer details
         const carOrders = await prisma.carOrder.findMany({
             include: {
                 car: true,
@@ -15,6 +17,7 @@ router.get('/', async (req: Request, res: Response) => {
             },
         });
 
+        // Retrieve truck orders with associated truck and customer details
         const truckOrders = await prisma.truckOrder.findMany({
             include: {
                 truck: true,
@@ -22,6 +25,7 @@ router.get('/', async (req: Request, res: Response) => {
             },
         });
 
+        // Retrieve motorcycle orders with associated motorcycle and customer details
         const motorcycleOrders = await prisma.motorcycleOrder.findMany({
             include: {
                 motorcycle: true,
@@ -49,12 +53,14 @@ router.get('/', async (req: Request, res: Response) => {
     }
 })
 
+// Create a new order
 router.post('/', async (req: Request, res: Response) => {
     try {
         const { customer_id, vehicle_id, vehicle_type } = req.body;
         let order;
         switch (vehicle_type) {
             case 'car':
+                // Create a new car order with associated customer and car details
                 order = await prisma.carOrder.create({
                     data: {
                         customerId: customer_id,
@@ -67,6 +73,7 @@ router.post('/', async (req: Request, res: Response) => {
                 });
                 break;
             case 'truck':
+                // Create a new truck order with associated customer and truck details
                 order = await prisma.truckOrder.create({
                     data: {
                         customerId: customer_id,
@@ -79,6 +86,7 @@ router.post('/', async (req: Request, res: Response) => {
                 });
                 break;
             case 'motorcycle':
+                // Create a new motorcycle order with associated customer and motorcycle details
                 order = await prisma.motorcycleOrder.create({
                     data: {
                         customerId: customer_id,
@@ -108,6 +116,7 @@ router.post('/', async (req: Request, res: Response) => {
     }
 })
 
+// Update an existing order by ID
 router.put('/:id', async (req: Request, res: Response) => {
     try {
         const { customer_id, vehicle_id, vehicle_type } = req.body;
@@ -115,6 +124,7 @@ router.put('/:id', async (req: Request, res: Response) => {
         let order;
         switch (vehicle_type) {
             case 'car':
+                // Update the specified car order with associated customer and car details
                 order = await prisma.carOrder.update({
                     where: {
                         id: parseInt(id)
@@ -130,6 +140,7 @@ router.put('/:id', async (req: Request, res: Response) => {
                 });
                 break;
             case 'truck':
+                // Update the specified truck order with associated customer and truck details
                 order = await prisma.truckOrder.update({
                     where: {
                         id: parseInt(id)
@@ -145,6 +156,7 @@ router.put('/:id', async (req: Request, res: Response) => {
                 });
                 break;
             case 'motorcycle':
+                // Update the specified motorcycle order with associated customer and motorcycle details
                 order = await prisma.motorcycleOrder.update({
                     where: {
                         id: parseInt(id)
@@ -177,6 +189,7 @@ router.put('/:id', async (req: Request, res: Response) => {
     }
 })
 
+// Delete an existing car order by ID
 router.delete('/cars/:id', async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
@@ -200,6 +213,7 @@ router.delete('/cars/:id', async (req: Request, res: Response) => {
     }
 })
 
+// Delete an existing truck order by ID
 router.delete('/trucks/:id', async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
@@ -223,6 +237,7 @@ router.delete('/trucks/:id', async (req: Request, res: Response) => {
     }
 })
 
+// Delete an existing motorcycle order by ID
 router.delete('/motorcycles/:id', async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
