@@ -11,56 +11,80 @@ datasource db {
 }
 
 model Customer {
-  id              Int      @id @default(autoincrement())
-  name            String
-  address         String
-  phone           String
-  id_card_number  String
-  orders          Order[]
+  id             Int           @id @default(autoincrement())
+  name           String
+  address        String
+  phone          String
+  id_card_number String
+
+  // Add the opposite relation fields for orders
+  carOrders        CarOrder[]
+  truckOrders      TruckOrder[]
+  motorcycleOrders MotorcycleOrder[]
 }
 
 model Car {
-  id              Int      @id @default(autoincrement())
-  model           String
-  year            Int
-  seats           Int
-  manufacturer    String
-  price           Int
-  fuel_type       String
-  trunk_capacity  Int
-  orders          Order[]
+  id             Int    @id @default(autoincrement())
+  model          String
+  year           Int
+  seats          Int
+  manufacturer   String
+  price          Int
+  fuel_type      String
+  trunk_capacity Int
+
+  // Add the opposite relation field for orders
+  carOrders CarOrder[]
 }
 
 model Truck {
-  id               Int      @id @default(autoincrement())
-  model            String
-  year             Int
-  seats            Int
-  manufacturer     String
-  price            Int
-  wheels           Int
-  cargo_capacity   Int
-  orders           Order[]
+  id             Int    @id @default(autoincrement())
+  model          String
+  year           Int
+  seats          Int
+  manufacturer   String
+  price          Int
+  wheels         Int
+  cargo_capacity Int
+
+  // Add the opposite relation field for orders
+  truckOrders TruckOrder[]
 }
 
 model Motorcycle {
-  id                Int      @id @default(autoincrement())
-  model             String
-  year              Int
-  seats             Int
-  manufacturer      String
-  price             Int
-  trunk_capacity    Int
-  fuel_capacity     Int
-  orders            Order[]
+  id             Int     @id @default(autoincrement())
+  model          String
+  year           Int
+  seats          Int
+  manufacturer   String
+  price          Int
+  trunk_capacity Int
+  fuel_capacity  Int
+
+  // Add the opposite relation field for orders
+  motorcycleOrders MotorcycleOrder[]
 }
 
-model Order {
-  id              Int      @id @default(autoincrement())
-  customer_id     Int
-  vehicle_id      Int
-  customer        Customer @relation(fields: [customer_id], references: [id])
-  car             Car?     @relation(fields: [vehicle_id], references: [id], map: "order_car_fk")
-  truck           Truck?   @relation(fields: [vehicle_id], references: [id], map: "order_truck_fk")
-  motorcycle      Motorcycle? @relation(fields: [vehicle_id], references: [id], map: "order_motorcycle_fk")
+model CarOrder {
+  id         Int   @id @default(autoincrement())
+  customer   Customer @relation(fields: [customerId], references: [id])
+  customerId Int
+  car        Car @relation(fields: [carId], references: [id])
+  carId      Int
+}
+
+model TruckOrder {
+  id         Int   @id @default(autoincrement())
+  customer   Customer @relation(fields: [customerId], references: [id])
+  customerId Int
+  truck      Truck @relation(fields: [truckId], references: [id])
+  truckId    Int
+}
+
+model MotorcycleOrder {
+  id           Int   @id @default(autoincrement())
+  customer     Customer @relation(fields: [customerId], references: [id])
+  customerId   Int
+  motorcycle   Motorcycle @relation(fields: [motorcycleId], references: [id])
+  motorcycleId Int
 }
