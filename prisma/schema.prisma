@@ -16,6 +16,7 @@ model Customer {
   address        String
   phone          String
   id_card_number String
+  id_card_photo  String
 
   // Add the opposite relation fields for orders
   carOrders        CarOrder[]
