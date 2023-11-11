@@ -16,4 +16,25 @@ router.get('/', async (req: Request, res: Response) => {
     );
 });
 
+router.post('/', async (req: Request, res: Response) => {
+    const { model, year, seats, manufacturer, price, trunk_capacity, fuel_capacity } = req.body;
+    const motorcycle = await prisma.motorcycle.create({
+        data: {
+            model,
+            year,
+            seats,
+            manufacturer,
+            price,
+            trunk_capacity,
+            fuel_capacity
+        }
+    });
+    res.json(
+        {
+            success: true,
+            data: motorcycle
+        }
+    );
+})
+
 export default router;
