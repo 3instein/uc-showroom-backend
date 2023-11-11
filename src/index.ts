@@ -4,6 +4,7 @@ import express from "express";
 import createError from "http-errors";
 import carRoutes from "../routes/carRoutes";
 import truckRoutes from "../routes/truckRoutes";
+import motorcycleRoutes from "../routes/motorcycleRoutes";
 import customerRoutes from "../routes/customerRoutes";
 import cors from "cors";
 
@@ -15,6 +16,7 @@ app.use(express.json(), cors());
 app.use('/cars', carRoutes);
 app.use('/customers', customerRoutes);
 app.use('/trucks', truckRoutes);
+app.use('/motorcycles', motorcycleRoutes);
 
 // handle 404 error
 app.use((req, res, next) => {
