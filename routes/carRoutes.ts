@@ -37,6 +37,31 @@ router.post('/', async (req: Request, res: Response) => {
     );
 })
 
+router.put('/:id', async (req: Request, res: Response) => {
+    const { model, year, seats, manufacturer, price, fuel_type, trunk_capacity } = req.body;
+    const { id } = req.params;
+    const car = await prisma.car.update({
+        where: {
+            id: parseInt(id)
+        },
+        data: {
+            model,
+            year,
+            seats,
+            manufacturer,
+            price,
+            fuel_type,
+            trunk_capacity
+        }
+    });
+    res.json(
+        {
+            success: true,
+            data: car
+        }
+    );
+})
+
 router.delete('/:id', async (req: Request, res: Response) => {
     const { id } = req.params;
     const car = await prisma.car.delete({
