@@ -34,4 +34,26 @@ router.post('/', async (req: Request, res: Response) => {
     );
 })
 
+router.put('/:id', async (req: Request, res: Response) => {
+    const { name, address, phone, id_card_number } = req.body;
+    const { id } = req.params;
+    const customer = await prisma.customer.update({
+        where: {
+            id: parseInt(id)
+        },
+        data: {
+            name,
+            address,
+            phone,
+            id_card_number
+        }
+    });
+    res.json(
+        {
+            success: true,
+            data: customer
+        }
+    );
+})
+
 export default router;
