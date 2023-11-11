@@ -7,9 +7,6 @@ const app = express()
 
 app.use(express.json())
 
-
-// TODO: Routing aplikasi akan kita tulis di sini
-
 app.get("/", async (req: Request, res: Response) => {
     return res.json({ message: "Hello World" })
 })
