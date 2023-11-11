@@ -108,6 +108,75 @@ router.post('/', async (req: Request, res: Response) => {
     }
 })
 
+router.put('/:id', async (req: Request, res: Response) => {
+    try {
+        const { customer_id, vehicle_id, vehicle_type } = req.body;
+        const { id } = req.params;
+        let order;
+        switch (vehicle_type) {
+            case 'car':
+                order = await prisma.carOrder.update({
+                    where: {
+                        id: parseInt(id)
+                    },
+                    data: {
+                        customerId: customer_id,
+                        carId: vehicle_id,
+                    },
+                    include: {
+                        car: true,
+                        customer: true,
+                    },
+                });
+                break;
+            case 'truck':
+                order = await prisma.truckOrder.update({
+                    where: {
+                        id: parseInt(id)
+                    },
+                    data: {
+                        customerId: customer_id,
+                        truckId: vehicle_id,
+                    },
+                    include: {
+                        truck: true,
+                        customer: true,
+                    },
+                });
+                break;
+            case 'motorcycle':
+                order = await prisma.motorcycleOrder.update({
+                    where: {
+                        id: parseInt(id)
+                    },
+                    data: {
+                        customerId: customer_id,
+                        motorcycleId: vehicle_id,
+                    },
+                    include: {
+                        motorcycle: true,
+                        customer: true,
+                    },
+                });
+                break;
+            default:
+                throw new Error(`Invalid vehicle_type: ${vehicle_type}`);
+        }
+        res.json(
+            {
+                success: true,
+                data: order
+            }
+        );
+    } catch (error) {
+        console.error("Error updating order:", error);
+        res.status(500).json({
+            success: false,
+            error: "Internal Server Error"
+        });
+    }
+})
+
 router.delete('/cars/:id', async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
