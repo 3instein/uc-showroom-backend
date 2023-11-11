@@ -1,8 +1,20 @@
 import express, { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
+import multer from 'multer';
 
 const prisma = new PrismaClient();
 const router = express.Router();
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'public/uploads'); // Set the destination folder for uploaded files
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + '-' + file.originalname); // Set a unique filename for each uploaded file
+    },
+});
+
+const upload = multer({ storage: storage });
 
 router.get('/', async (req: Request, res: Response) => {
     const customers = await prisma.customer.findMany();
@@ -15,13 +27,15 @@ router.get('/', async (req: Request, res: Response) => {
 });
 
 router.post('/', async (req: Request, res: Response) => {
-    const { name, address, phone, id_card_number } = req.body;
+    const { name, address, phone, id_card_number, id_card_photo } = req.body;
+
     const customer = await prisma.customer.create({
         data: {
             name,
             address,
             phone,
-            id_card_number
+            id_card_number,
+            id_card_photo
         }
     });
     res.json(
@@ -31,6 +45,34 @@ router.post('/', async (req: Request, res: Response) => {
         }
     );
 })
+
+router.post('/resource', upload.single('file'), async (req: Request, res: Response) => {
+    const file = req.file;
+
+    if (!file) {
+        res.status(400).json({
+            success: false,
+            error: 'No file uploaded.'
+        });
+        return;
+    }
+
+    // Accessing uploaded file details
+    const fileName = file.filename;
+    const filePath = file.path;
+
+    // Assuming your server is serving static files from a 'uploads' directory
+    const imageUrl = `${req.protocol}://${req.get('host')}/uploads/${fileName}`;
+
+    res.json({
+        success: true,
+        data: {
+            name: fileName,
+            path: filePath,
+            imageUrl: imageUrl, // Provide this URL to the frontend
+        }
+    });
+});
 
 router.put('/:id', async (req: Request, res: Response) => {
     const { name, address, phone, id_card_number } = req.body;
