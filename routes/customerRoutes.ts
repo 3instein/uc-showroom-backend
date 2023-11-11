@@ -75,7 +75,7 @@ router.post('/resource', upload.single('file'), async (req: Request, res: Respon
 });
 
 router.put('/:id', async (req: Request, res: Response) => {
-    const { name, address, phone, id_card_number } = req.body;
+    const { name, address, phone, id_card_number, id_card_photo } = req.body;
     const { id } = req.params;
     const customer = await prisma.customer.update({
         where: {
@@ -85,7 +85,8 @@ router.put('/:id', async (req: Request, res: Response) => {
             name,
             address,
             phone,
-            id_card_number
+            id_card_number,
+            id_card_photo
         }
     });
     res.json(
