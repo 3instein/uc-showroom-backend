@@ -16,4 +16,22 @@ router.get('/', async (req: Request, res: Response) => {
     );
 });
 
+router.post('/', async (req: Request, res: Response) => {
+    const { name, address, phone, id_card_number } = req.body;
+    const customer = await prisma.customer.create({
+        data: {
+            name,
+            address,
+            phone,
+            id_card_number
+        }
+    });
+    res.json(
+        {
+            success: true,
+            data: customer
+        }
+    );
+})
+
 export default router;
