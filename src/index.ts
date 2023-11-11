@@ -1,21 +1,21 @@
-import { PrismaClient } from "@prisma/client";
-import express, { Request, Response } from "express";
-import createError from "http-errors"
+// index.ts
 
-const prisma = new PrismaClient()
-const app = express()
+import express from "express";
+import createError from "http-errors";
+import carRoutes from "../routes/carRoutes";
 
-app.use(express.json())
+const app = express();
 
-app.get("/", async (req: Request, res: Response) => {
-    return res.json({ message: "Hello World" })
-})
+app.use(express.json());
+
+// Use the carRoutes module for the '/cars' route
+app.use('/cars', carRoutes);
 
 // handle 404 error
-app.use((req: Request, res: Response, next: Function) => {
-    next(createError(404))
-})
+app.use((req, res, next) => {
+    next(createError(404));
+});
 
 app.listen(3000, () =>
     console.log(`⚡️[server]: Server is running at https://localhost:3000`)
-)
+);
