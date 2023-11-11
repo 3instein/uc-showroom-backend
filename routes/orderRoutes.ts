@@ -30,7 +30,7 @@ router.get('/', async (req: Request, res: Response) => {
         });
 
         // Convert each order to a common structure with vehicle_type
-        const ordersWithVehicleType = [
+        const ordersWithVehicleInfo = [
             ...carOrders.map(order => ({ ...order, vehicle_type: 'car', vehicle_price: order.car.price })),
             ...truckOrders.map(order => ({ ...order, vehicle_type: 'truck', vehicle_price: order.truck.price })),
             ...motorcycleOrders.map(order => ({ ...order, vehicle_type: 'motorcycle', vehicle_price: order.motorcycle.price })),
@@ -38,10 +38,69 @@ router.get('/', async (req: Request, res: Response) => {
 
         res.json({
             success: true,
-            data: ordersWithVehicleType,
+            data: ordersWithVehicleInfo,
         });
     } catch (error) {
         console.error("Error retrieving orders:", error);
+        res.status(500).json({
+            success: false,
+            error: "Internal Server Error"
+        });
+    }
+})
+
+router.post('/', async (req: Request, res: Response) => {
+    try {
+        const { customer_id, vehicle_id, vehicle_type } = req.body;
+        let order;
+        switch (vehicle_type) {
+            case 'car':
+                order = await prisma.carOrder.create({
+                    data: {
+                        customerId: customer_id,
+                        carId: vehicle_id,
+                    },
+                    include: {
+                        car: true,
+                        customer: true,
+                    },
+                });
+                break;
+            case 'truck':
+                order = await prisma.truckOrder.create({
+                    data: {
+                        customerId: customer_id,
+                        truckId: vehicle_id,
+                    },
+                    include: {
+                        truck: true,
+                        customer: true,
+                    },
+                });
+                break;
+            case 'motorcycle':
+                order = await prisma.motorcycleOrder.create({
+                    data: {
+                        customerId: customer_id,
+                        motorcycleId: vehicle_id,
+                    },
+                    include: {
+                        motorcycle: true,
+                        customer: true,
+                    },
+                });
+                break;
+            default:
+                throw new Error(`Invalid vehicle_type: ${vehicle_type}`);
+        }
+        res.json(
+            {
+                success: true,
+                data: order
+            }
+        );
+    } catch (error) {
+        console.error("Error creating order:", error);
         res.status(500).json({
             success: false,
             error: "Internal Server Error"
