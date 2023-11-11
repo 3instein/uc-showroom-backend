@@ -56,4 +56,19 @@ router.put('/:id', async (req: Request, res: Response) => {
     );
 })
 
+router.delete('/:id', async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const customer = await prisma.customer.delete({
+        where: {
+            id: parseInt(id)
+        }
+    });
+    res.json(
+        {
+            success: true,
+            data: customer
+        }
+    );
+})
+
 export default router;
